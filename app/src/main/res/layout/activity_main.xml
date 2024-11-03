@@ -106,6 +106,24 @@
                 android:drawableEnd="@drawable/password_icon"
                 android:inputType="textPassword" />
 
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="10dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:alpha="0.7"
+                android:text="Join Code"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/joinCode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableEnd="@drawable/code_icon"
+                android:inputType="text"/>
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
