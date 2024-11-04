@@ -44,6 +44,24 @@
             android:indeterminateTint="@color/orange"
             android:visibility="invisible" />
 
+        <!-- Moved "Select Date" and "Attach Audio File" buttons here -->
+        <Button
+            android:id="@+id/select_date_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Select Date"
+            android:drawableRight="@drawable/date_upload_icon"/>
+
+        <Button
+            android:id="@+id/attach_audio_file_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Attach Audio File"
+            android:drawableRight="@drawable/audio_upload_icon"/>
+
+        <!-- Caption and Send Button Section -->
         <LinearLayout
             android:layout_width="309dp"
             android:layout_height="60dp"
@@ -66,14 +84,7 @@
                 android:layout_marginStart="10dp"
                 android:backgroundTint="@color/orange"
                 android:src="@drawable/send_icon" />
-
-
         </LinearLayout>
-
-
-
-
-
     </LinearLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -81,7 +92,6 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-
         android:background="@color/white"
         app:labelVisibilityMode="labeled"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -90,6 +100,5 @@
         app:itemTextColor="@color/black"
         app:itemIconTint="@color/black"
         app:menu="@menu/bottom_nav_menu" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
