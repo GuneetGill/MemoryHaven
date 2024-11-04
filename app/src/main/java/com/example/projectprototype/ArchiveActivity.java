@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.ListAdapter;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -21,16 +22,23 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.projectprototype.databinding.ActivityArchiveBinding;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 
 public class ArchiveActivity extends AppCompatActivity {
     ActivityArchiveBinding binding;
-    GridView gridView;
+    GridView gridView2;
 
-    Integer[] image = {
-      R.drawable.sky,R.drawable.mountain1,R.drawable.trees,R.drawable.lake,
-            R.drawable.sky,R.drawable.mountain1,R.drawable.trees,R.drawable.lake,
-            R.drawable.lake,R.drawable.mountain1
-    };
+    ArrayList<DataClass> dataList2;
+
+    MyAdapter2 adapter2;
+
+    final private DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Images");
 
 
     @Override
@@ -40,8 +48,25 @@ public class ArchiveActivity extends AppCompatActivity {
         binding = ActivityArchiveBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        gridView = findViewById(R.id.gridImage);
-        gridView.setAdapter(new ImageAdapterGridView(this));
+        gridView2 = findViewById(R.id.gridView);
+        dataList2 = new ArrayList<>();
+        adapter2 = new MyAdapter2(dataList2,this);
+        gridView2.setAdapter(adapter2); //set adapter here
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot dataSnapshot: snapshot.getChildren()){
+                    DataClass dataClass = dataSnapshot.getValue(DataClass.class);
+                    dataList2.add(dataClass);
+                }
+                adapter2.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
 
 
@@ -62,42 +87,6 @@ public class ArchiveActivity extends AppCompatActivity {
 
 
     }
-    private class ImageAdapterGridView extends BaseAdapter {
-        private Context mContext;
-        public ImageAdapterGridView(Context context){
-            mContext = context;
 
-        }
 
-        @Override
-        public int getCount() {
-            return image.length;
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return null;
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return 0;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            ImageView imageView;
-            if(convertView == null){
-                imageView = new ImageView(mContext);
-                imageView.setLayoutParams(new GridView.LayoutParams(300,300));
-                imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                imageView.setPadding(16,16,16,16);
-            } else{
-                imageView = (ImageView) convertView;
-
-            }
-            imageView.setImageResource(image[position]);
-            return imageView;
-        }
-    }
 }

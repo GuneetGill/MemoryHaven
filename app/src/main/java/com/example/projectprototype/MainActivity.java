@@ -40,8 +40,12 @@ public class MainActivity extends AppCompatActivity {
 
         // Set up login button click event
         login.setOnClickListener(v -> {
+
+
             String email = emailaddress.getText().toString().trim();
             String pass = password.getText().toString().trim();
+
+
 
             // Check if fields are empty
             if (email.isEmpty() || pass.isEmpty()) {
