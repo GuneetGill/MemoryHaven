@@ -86,21 +86,23 @@ public class SecondActivity extends AppCompatActivity {
 
 
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottomNavigationView);
-        bottomNavigationView.setOnNavigationItemSelectedListener((item)->{
-            if(item.getItemId() == R.id.nav_profile){ //if user click profile icon, switch to profile page
-                Intent intent = new Intent(SecondActivity.this,ProfileActivity.class);
+        bottomNavigationView.setOnNavigationItemSelectedListener((item) -> {
+            if (item.getItemId() == R.id.nav_profile) {
+                Intent intent = new Intent(SecondActivity.this, ProfileActivity.class);
                 startActivity(intent);
-            } else if (item.getItemId() == R.id.nav_archive) { //if user click upload icon, switch to upload page
+            } else if (item.getItemId() == R.id.nav_upload) {
+                Intent intent = new Intent(SecondActivity.this, UploadActivity.class);
+                startActivity(intent);
+            } else if (item.getItemId() == R.id.nav_archive) {
                 Intent intent = new Intent(SecondActivity.this, ArchiveActivity.class);
                 startActivity(intent);
             }
 
             return true;
-
         });
 
-        
-        
+
+
 
     }
 
