@@ -117,7 +117,8 @@
         android:backgroundTint="@color/orange"
         app:layout_constraintEnd_toEndOf="@+id/inputConfirmPassword"
         app:layout_constraintStart_toStartOf="@+id/inputConfirmPassword"
-        app:layout_constraintTop_toBottomOf="@+id/inputConfirmPassword" />
+        app:layout_constraintTop_toBottomOf="@+id/inputConfirmPassword"
+        android:background="@drawable/input_bg" />
 
     <TextView
         android:id="@+id/alreadyHaveAccount"

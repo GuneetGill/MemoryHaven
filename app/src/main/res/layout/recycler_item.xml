@@ -4,6 +4,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
+
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="250dp"
@@ -14,27 +15,43 @@
         app:cardElevation="10dp">
 
         <ImageView
+            android:id="@+id/recyclerImage"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/recyclerImage"
             android:src="@drawable/upload_icon"
-            android:scaleType="fitCenter"/>
-
+            android:scaleType="fitCenter" />
     </androidx.cardview.widget.CardView>
 
+    <!-- Date TextView -->
     <TextView
+        android:id="@+id/recyclerDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Date"
+        android:textSize="16sp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/black" />
+
+    <!-- Caption TextView -->
+    <TextView
         android:id="@+id/recyclerCaption"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="Caption"
         android:textSize="18sp"
         android:layout_marginEnd="20dp"
         android:layout_marginStart="20dp"
         android:layout_marginBottom="10dp"
-        android:textColor="@color/black"/>
+        android:textColor="@color/black" />
 
-
-
-
-
+    <!-- Play Audio Button -->
+    <Button
+        android:id="@+id/btnPlayAudio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Play Audio"
+        android:layout_marginBottom="20dp"
+        android:layout_gravity="center" />
 </LinearLayout>

@@ -143,6 +143,7 @@
                 android:backgroundTint="@color/orange"
                 android:text="Login"
                 android:textSize="25dp"
+                android:background="@drawable/input_bg"
                 app:cornerRadius="32dp" />
 
             <TextView
