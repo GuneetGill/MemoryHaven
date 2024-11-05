@@ -22,6 +22,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.projectprototype.databinding.ActivityArchiveBinding;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -38,7 +39,9 @@ public class ArchiveActivity extends AppCompatActivity {
 
     MyAdapter2 adapter2;
 
-    final private DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Images");
+    FirebaseAuth auth = FirebaseAuth.getInstance();
+    String uid = auth.getCurrentUser().getUid();
+    final private DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("media").child(uid);
 
 
     @Override

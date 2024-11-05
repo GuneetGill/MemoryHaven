@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.projectprototype.databinding.ActivitySecondBinding;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -37,7 +38,9 @@ public class SecondActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     ArrayList<DataClass> dataList;
     MyAdapter adapter;
-    final private DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Images");
+    FirebaseAuth auth = FirebaseAuth.getInstance();
+    String uid = auth.getCurrentUser().getUid();
+    final private DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("media").child(uid);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

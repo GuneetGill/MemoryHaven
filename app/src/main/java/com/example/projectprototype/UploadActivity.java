@@ -1,5 +1,6 @@
 package com.example.projectprototype;
 
+import com.google.firebase.auth.FirebaseAuth;
 import android.Manifest;
 import android.app.Activity;
 import android.content.ContentResolver;
@@ -8,7 +9,6 @@ import android.content.pm.PackageManager;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
@@ -48,24 +48,31 @@ public class UploadActivity extends AppCompatActivity {
     private Button btnRecordAudio, btnUploadAudio;
 
     private Uri imageUri;
-    private Uri audioUri; // New variable for selected audio URI
+    private Uri audioUri;
     private MediaRecorder mediaRecorder;
     private String audioFilePath;
 
-    final private DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Images");
-    final private StorageReference storageReference = FirebaseStorage.getInstance().getReference();
+    private FirebaseAuth auth;
+    private DatabaseReference databaseReference;
+    private StorageReference storageReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upload);
 
+        // Initialize Firebase references
+        auth = FirebaseAuth.getInstance();
+        String uid = auth.getCurrentUser().getUid();
+        databaseReference = FirebaseDatabase.getInstance().getReference("media").child(uid);
+        storageReference = FirebaseStorage.getInstance().getReference().child("media").child(uid);
+
         uploadButton = findViewById(R.id.uploadButton);
         uploadCaption = findViewById(R.id.uploadCaption);
         uploadImage = findViewById(R.id.uploadImage);
         uploadDate = findViewById(R.id.uploadDate);
         btnRecordAudio = findViewById(R.id.btnRecordAudio);
-        btnUploadAudio = findViewById(R.id.btnUploadAudio); // New button for uploading audio
+        btnUploadAudio = findViewById(R.id.btnUploadAudio);
         progressBar = findViewById(R.id.progressBar);
         progressBar.setVisibility(View.INVISIBLE);
 
@@ -73,63 +80,46 @@ public class UploadActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, 1);
         }
 
-        btnRecordAudio.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mediaRecorder == null) {
-                    startRecording();
-                } else {
-                    stopRecording();
-                }
+        btnRecordAudio.setOnClickListener(v -> {
+            if (mediaRecorder == null) {
+                startRecording();
+            } else {
+                stopRecording();
             }
         });
 
-        btnUploadAudio.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectAudioFile();
-            }
-        });
+        btnUploadAudio.setOnClickListener(v -> selectAudioFile());
 
         ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
-                new ActivityResultCallback<ActivityResult>() {
-                    @Override
-                    public void onActivityResult(ActivityResult result) {
-                        if(result.getResultCode() == Activity.RESULT_OK){
-                            Intent data = result.getData();
-                            imageUri = data.getData();
-                            uploadImage.setImageURI(imageUri);
-                        } else {
-                            Toast.makeText(UploadActivity.this, "No image Selected", Toast.LENGTH_SHORT).show();
-                        }
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Intent data = result.getData();
+                        imageUri = data.getData();
+                        uploadImage.setImageURI(imageUri);
+                    } else {
+                        Toast.makeText(UploadActivity.this, "No image Selected", Toast.LENGTH_SHORT).show();
                     }
                 });
 
-        uploadImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent photoPicker = new Intent();
-                photoPicker.setAction(Intent.ACTION_GET_CONTENT);
-                photoPicker.setType("image/*");
-                activityResultLauncher.launch(photoPicker);
-            }
+        uploadImage.setOnClickListener(v -> {
+            Intent photoPicker = new Intent();
+            photoPicker.setAction(Intent.ACTION_GET_CONTENT);
+            photoPicker.setType("image/*");
+            activityResultLauncher.launch(photoPicker);
         });
 
-        uploadButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(imageUri != null && (audioFilePath != null || audioUri != null)){
-                    uploadToFirebase(imageUri);
-                } else {
-                    Toast.makeText(UploadActivity.this, "Please select an image and record/upload audio", Toast.LENGTH_SHORT).show();
-                }
+        uploadButton.setOnClickListener(v -> {
+            if (imageUri != null && (audioFilePath != null || audioUri != null)) {
+                uploadToFirebase(imageUri);
+            } else {
+                Toast.makeText(UploadActivity.this, "Please select an image and record/upload audio", Toast.LENGTH_SHORT).show();
             }
         });
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
-        bottomNavigationView.setOnNavigationItemSelectedListener((item) -> {
-            if(item.getItemId() == R.id.nav_home) {
+        bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
+            if (item.getItemId() == R.id.nav_home) {
                 startActivity(new Intent(UploadActivity.this, SecondActivity.class));
             } else if (item.getItemId() == R.id.nav_profile) {
                 startActivity(new Intent(UploadActivity.this, ProfileActivity.class));
@@ -153,12 +143,9 @@ public class UploadActivity extends AppCompatActivity {
             mediaRecorder.start();
             btnRecordAudio.setText("Stop Recording");
             Toast.makeText(this, "Recording started", Toast.LENGTH_SHORT).show();
-        } catch (IOException e) {
+        } catch (IOException | IllegalStateException e) {
             e.printStackTrace();
             Toast.makeText(this, "Failed to start recording: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-        } catch (IllegalStateException e) {
-            e.printStackTrace();
-            Toast.makeText(this, "Recording in an invalid state: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -193,36 +180,31 @@ public class UploadActivity extends AppCompatActivity {
     private void uploadToFirebase(Uri imageUri) {
         String caption = uploadCaption.getText().toString();
         String date = uploadDate.getText().toString();
-        final StorageReference imageReference = storageReference.child("images/" + System.currentTimeMillis() + "." + getFileExtension(imageUri));
-        final StorageReference audioReference = storageReference.child("audios/" + System.currentTimeMillis() + (audioFilePath != null ? ".3gp" : ".mp3"));
+        String mediaId = databaseReference.push().getKey();
 
-        imageReference.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                imageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri imageUrl) {
-                        uploadAudioToFirebase(audioReference, imageUrl.toString(), caption, date);
-                    }
-                });
-            }
-        }).addOnFailureListener(e -> Toast.makeText(UploadActivity.this, "Image upload failed", Toast.LENGTH_SHORT).show());
+        final StorageReference imageReference = storageReference.child("images/" + mediaId + "." + getFileExtension(imageUri));
+        final StorageReference audioReference = storageReference.child("audios/" + mediaId + (audioFilePath != null ? ".3gp" : ".mp3"));
+
+        imageReference.putFile(imageUri).addOnSuccessListener(taskSnapshot ->
+                imageReference.getDownloadUrl().addOnSuccessListener(imageUrl ->
+                        uploadAudioToFirebase(audioReference, imageUrl.toString(), caption, date, mediaId)
+                )
+        ).addOnFailureListener(e -> Toast.makeText(UploadActivity.this, "Image upload failed", Toast.LENGTH_SHORT).show());
     }
 
-    private void uploadAudioToFirebase(StorageReference audioReference, String imageUrl, String caption, String date) {
+    private void uploadAudioToFirebase(StorageReference audioReference, String imageUrl, String caption, String date, String mediaId) {
         Uri finalAudioUri = audioUri != null ? audioUri : Uri.fromFile(new File(audioFilePath));
 
         audioReference.putFile(finalAudioUri).addOnSuccessListener(taskSnapshot ->
-                audioReference.getDownloadUrl().addOnSuccessListener(audioUrl -> {
-                    saveDataToDatabase(imageUrl, caption, date, audioUrl.toString());
-                })
+                audioReference.getDownloadUrl().addOnSuccessListener(audioUrl ->
+                        saveDataToDatabase(imageUrl, caption, date, audioUrl.toString(), mediaId)
+                )
         ).addOnFailureListener(e -> Toast.makeText(UploadActivity.this, "Audio upload failed", Toast.LENGTH_SHORT).show());
     }
 
-    private void saveDataToDatabase(String imageUrl, String caption, String date, String audioUrl) {
+    private void saveDataToDatabase(String imageUrl, String caption, String date, String audioUrl, String mediaId) {
         DataClass dataClass = new DataClass(imageUrl, caption, date, audioUrl);
-        String key = databaseReference.push().getKey();
-        databaseReference.child(key).setValue(dataClass);
+        databaseReference.child(mediaId).setValue(dataClass);
         progressBar.setVisibility(View.INVISIBLE);
         Toast.makeText(UploadActivity.this, "Uploaded", Toast.LENGTH_SHORT).show();
         startActivity(new Intent(UploadActivity.this, SecondActivity.class));
