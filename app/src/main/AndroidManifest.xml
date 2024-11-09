@@ -27,14 +27,20 @@
             android:exported="false" />
         <activity
             android:name=".UploadActivity"
-            android:exported="false"
-            android:theme="@style/Theme.UploadActivity"/>
+            android:exported="false" />
         <activity
             android:name=".RegisterActivity"
             android:exported="false" />
         <activity
             android:name=".SecondActivity"
             android:exported="false" />
+        <activity
+            android:name=".LoginActivity"
+            android:exported="true"/>
+        <activity
+            android:name=".UIDActivity"
+            android:exported="true"/>
+
         <activity
             android:name=".MainActivity"
             android:exported="true">

@@ -36,7 +36,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         // Set up "Already have an account?" button to navigate to login page
         alreadyHaveAccount.setOnClickListener(v ->
-                startActivity(new Intent(RegisterActivity.this, MainActivity.class))
+                startActivity(new Intent(RegisterActivity.this, LoginActivity.class))
         );
 
         // Set up register button click event
@@ -68,7 +68,7 @@ public class RegisterActivity extends AppCompatActivity {
                         // Registration success
                         FirebaseUser user = mAuth.getCurrentUser();
                         Toast.makeText(RegisterActivity.this, "Registration successful!", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(RegisterActivity.this, MainActivity.class));
+                        startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
                         finish();
                     } else {
                         // Registration failed

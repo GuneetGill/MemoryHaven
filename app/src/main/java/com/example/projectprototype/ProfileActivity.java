@@ -4,6 +4,7 @@ package com.example.projectprototype;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -25,6 +26,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import com.example.projectprototype.databinding.ActivityProfileBinding;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -41,12 +43,8 @@ public class ProfileActivity extends AppCompatActivity {
 
     private ActivityProfileBinding binding;
     private FirebaseAuth mAuth;
-    private DatabaseReference databaseReference;
-    EditText profileUsername, profileEmail, profilePassword, profileConfirmpassword;
-    TextView titleName;
 
-
-
+    private MaterialButton logoutBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,41 +60,35 @@ public class ProfileActivity extends AppCompatActivity {
         //initialize firebase authentication
         mAuth = FirebaseAuth.getInstance();
 
-
         // Get the current user
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
+        //Initialize views
+        logoutBtn = findViewById(R.id.logoutbtn);
 
-
-
-
-
-        //display uerserID
+        //display userID
         String userId = currentUser.getUid();
         binding.inputJoinCode.setText(userId);
 
-
+        //display email
         String email = currentUser.getEmail();
         binding.inputEmail.setText(email);
 
-
-
-
-
-
+        //Set up password reset button click event
         Button resetPasswordButton = findViewById(R.id.resetPasswordButton);
         resetPasswordButton.setOnClickListener(view ->{
             resetPassword(email); //Get user's email
         });
 
-
-
-
-
-
-
-
-
+        // Set up logout button click event
+        logoutBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Switch back to main page
+                startActivity(new Intent(ProfileActivity.this, MainActivity.class));
+                finish();
+            }
+        });
 
         //set up bottom navigation
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottomNavigationView);
@@ -110,17 +102,9 @@ public class ProfileActivity extends AppCompatActivity {
             } else if (item.getItemId() == R.id.nav_archive) { //if user click archive icon, switch to archive page
                 Intent intent = new Intent(ProfileActivity.this,ArchiveActivity.class);
                 startActivity(intent);
-
-
             }
-
-
             return true;
-
-
         });
-
-
     }
     //Set up a password reset function
     private void resetPassword(String email){
@@ -132,8 +116,6 @@ public class ProfileActivity extends AppCompatActivity {
             else { //notify user that reset email has failed to sent
                 Toast.makeText(ProfileActivity.this, "Failed to send reset email.", Toast.LENGTH_SHORT).show();
             }
-
-
         });
     }
 
