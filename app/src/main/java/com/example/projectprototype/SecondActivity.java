@@ -20,18 +20,24 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
+//SecondActivity serves as the home screen of the app, displaying a list of media items from Firebase in a RecyclerView
+// displays multimedia feed with text and audio
 public class SecondActivity extends AppCompatActivity {
 
-// The Main/Home Page -> the feed
-    // Need to create a another button in the menu -> archive
-    //
-
+    // Define maximum number of uploads allowed
+    private static final int MAX_DISPLAY = 4;
 
     ActivitySecondBinding binding;
     FloatingActionButton fab;
@@ -40,33 +46,100 @@ public class SecondActivity extends AppCompatActivity {
     MyAdapter adapter;
     FirebaseAuth auth = FirebaseAuth.getInstance();
     String uid = auth.getCurrentUser().getUid();
+    //gets data for specfic user
     final private DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("media").child(uid);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
       binding = ActivitySecondBinding.inflate(getLayoutInflater());
-//        setContentView(binding.getRoot());
         setContentView(R.layout.activity_second);
 
 
         fab = findViewById(R.id.fab);
         recyclerView = findViewById(R.id.recyclerView);
 
+        //bind data from datalist
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         dataList = new ArrayList<>();
         adapter = new MyAdapter(dataList,this);
         recyclerView.setAdapter(adapter);
 
+        //fetching data from database
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot dataSnapshot: snapshot.getChildren()){
+            public void onDataChange(@NonNull DataSnapshot snapshot)
+            {
+                // Clear the existing data to ensure you only show the latest posts
+                dataList.clear();
+
+                // Get today's date in MM/dd/yyyy format
+                SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
+                String todayDate = sdf.format(new Date()); // Current date in the MM/dd/yyyy format
+
+                // Limit the number of posts to first few based on MAX_DISPLAYS number
+                int postCount = 0;
+
+                // Stores all posts into this array
+                ArrayList<DataClass> allPosts = new ArrayList<>();
+                // Loop through each child node under `media/<user_id>`
+                for (DataSnapshot dataSnapshot : snapshot.getChildren())
+                {
+                    // Convert each child into a `DataClass` object
                     DataClass dataClass = dataSnapshot.getValue(DataClass.class);
-                    dataList.add(dataClass);
+
+                    // Add the `DataClass` object to the list if it’s not null
+                    if (dataClass != null) {
+                        allPosts.add(dataClass);
+                    }
                 }
+
+                for (DataSnapshot dataSnapshot : snapshot.getChildren())
+                {
+
+                    //get data stored in database
+                    DataClass dataClass = dataSnapshot.getValue(DataClass.class);
+
+                    //check date with todays date
+                    if (dataClass != null && todayDate.equals(dataClass.getDate()))
+                    {
+                        if (postCount < MAX_DISPLAY)
+                        {
+                            dataList.add(dataClass); // Add the post to the list
+                            postCount++; // Increment the counter
+                        }
+                        else
+                        {
+                            // Stop adding posts once we have reached max
+                            break;
+                        }
+                    }
+
+                    //if post counter is less than display randomly from archive
+                    if (postCount < MAX_DISPLAY)
+                    {
+                        // Shuffle allPosts to get random order
+                        Collections.shuffle(allPosts);
+                        // Add posts from allPosts until reaching MAX_DISPLAY
+                        for (DataClass randomPost : allPosts) {
+                            if (postCount >= MAX_DISPLAY) {
+                                break;
+                            }
+                            // Ensure no duplicates
+                            if (!dataList.contains(randomPost)) {
+                                dataList.add(randomPost);
+                                postCount++;
+                            }
+                        }
+                    }
+
+                    }
+                // Notify the adapter that the data has changed
                 adapter.notifyDataSetChanged();
             }
+
+
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {

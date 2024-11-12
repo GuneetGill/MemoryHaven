@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.google.gms.google.services)
+
 }
 
 android {
@@ -42,6 +43,7 @@ android {
 
 }
 
+
 dependencies {
 
     implementation(libs.appcompat)
@@ -58,5 +60,6 @@ dependencies {
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
     implementation("com.github.bumptech.glide:glide:4.14.2")
+    implementation("com.google.firebase:firebase-storage:21.0.1")
     annotationProcessor("com.github.bumptech.glide:compiler:4.14.2")
 }

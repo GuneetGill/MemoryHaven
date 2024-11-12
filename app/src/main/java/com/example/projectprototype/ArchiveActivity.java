@@ -31,6 +31,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+//This file defines the ArchiveActivity class, which handles displaying a grid of images for the logged-in user.
 public class ArchiveActivity extends AppCompatActivity {
     ActivityArchiveBinding binding;
     GridView gridView2;
