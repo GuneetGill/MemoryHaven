@@ -1,11 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:padding="16dp"
     tools:context=".UploadActivity">
 
@@ -44,17 +42,45 @@
             android:indeterminateTint="@color/orange"
             android:visibility="invisible" />
 
+        <Button
+            android:id="@+id/btnRecordAudio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:text="Record Audio"
+            android:backgroundTint = "@color/black" />
+
+        <Button
+            android:id="@+id/btnUploadAudio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:text="Upload Audio"
+            android:backgroundTint = "@color/black"/>
+
+        <EditText
+            android:id="@+id/uploadDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter date (DD/MM/YYYY)"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/input_bg"
+            android:padding="16dp"
+            android:inputType="date" />
+
         <LinearLayout
-            android:layout_width="309dp"
-            android:layout_height="60dp"
-            android:layout_marginTop="100dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
             android:orientation="horizontal">
 
             <EditText
                 android:id="@+id/uploadCaption"
-                android:layout_width="324dp"
+                android:layout_width="0dp"
                 android:layout_height="60dp"
-                android:layout_weight="0.6"
+                android:layout_weight="1"
                 android:background="@drawable/input_bg"
                 android:hint="Add a caption..."
                 android:padding="16dp" />
@@ -67,21 +93,15 @@
                 android:backgroundTint="@color/orange"
                 android:src="@drawable/send_icon" />
 
-
         </LinearLayout>
-
-
-
-
 
     </LinearLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-
         android:background="@color/white"
         app:labelVisibilityMode="labeled"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -90,6 +110,5 @@
         app:itemTextColor="@color/black"
         app:itemIconTint="@color/black"
         app:menu="@menu/bottom_nav_menu" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
