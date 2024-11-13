@@ -23,31 +23,25 @@ import com.google.firebase.database.ValueEventListener;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-
 import java.util.ArrayList;
 
 public class SecondActivity extends AppCompatActivity {
-
-// The Main/Home Page -> the feed
-    // Need to create a another button in the menu -> archive
-    //
-
 
     ActivitySecondBinding binding;
     FloatingActionButton fab;
     RecyclerView recyclerView;
     ArrayList<DataClass> dataList;
+    ArrayList<String> mediaIdList; // New list for Firebase keys
     MyAdapter adapter;
     FirebaseAuth auth = FirebaseAuth.getInstance();
     String uid = auth.getCurrentUser().getUid();
     final private DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("media").child(uid);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-      binding = ActivitySecondBinding.inflate(getLayoutInflater());
-//        setContentView(binding.getRoot());
+        binding = ActivitySecondBinding.inflate(getLayoutInflater());
         setContentView(R.layout.activity_second);
-
 
         fab = findViewById(R.id.fab);
         recyclerView = findViewById(R.id.recyclerView);
@@ -55,27 +49,31 @@ public class SecondActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         dataList = new ArrayList<>();
-        adapter = new MyAdapter(dataList,this);
+        mediaIdList = new ArrayList<>(); // Initialize the list for media IDs
+        adapter = new MyAdapter(dataList, mediaIdList, this);
         recyclerView.setAdapter(adapter);
 
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot dataSnapshot: snapshot.getChildren()){
+                dataList.clear(); // Clear the lists to avoid duplicates
+                mediaIdList.clear();
+
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     DataClass dataClass = dataSnapshot.getValue(DataClass.class);
-                    dataList.add(dataClass);
+                    String mediaId = dataSnapshot.getKey(); // Get the Firebase key
+
+                    dataList.add(dataClass); // Add the DataClass object
+                    mediaIdList.add(mediaId); // Add the key to the mediaIdList
                 }
                 adapter.notifyDataSetChanged();
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                // Handle errors here
             }
         });
-
-
-
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,8 +83,6 @@ public class SecondActivity extends AppCompatActivity {
                 finish();
             }
         });
-
-
 
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener((item) -> {
@@ -100,14 +96,7 @@ public class SecondActivity extends AppCompatActivity {
                 Intent intent = new Intent(SecondActivity.this, ArchiveActivity.class);
                 startActivity(intent);
             }
-
             return true;
         });
-
-
-
-
     }
-
-
 }
