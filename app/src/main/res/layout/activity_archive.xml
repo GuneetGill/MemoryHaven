@@ -8,34 +8,51 @@
     android:layout_height="match_parent"
     tools:context=".ArchiveActivity">
 
+    <GridView
+        android:id="@+id/gridView"
+        android:layout_width="match_parent"
+        android:layout_height="650dp"
+        android:layout_gravity="center"
+        android:horizontalSpacing="8dp"
+        android:numColumns="2"
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="8dp"
+        android:layout_marginTop="100dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
+    <!-- Timeline Archive Button -->
+    <Button
+        android:id="@+id/buttonTimelineArchive"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Timeline Archive"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"
+        app:layout_constraintEnd_toStartOf="@id/buttonKeywordArchive"
+        app:layout_constraintStart_toStartOf="parent" />
 
-        <GridView
-            android:id="@+id/gridView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:numColumns="2"
-            android:stretchMode="columnWidth"
-            android:verticalSpacing="8dp"
-            android:horizontalSpacing="8dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="@id/bottomNavigationView"
-            app:layout_constraintTop_toTopOf="parent"/> <!-- Center the GridView -->
-
-
+    <!-- Keyword Archive Button -->
+    <Button
+        android:id="@+id/buttonKeywordArchive"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Keyword Archive"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"
+        app:layout_constraintStart_toEndOf="@id/buttonTimelineArchive"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@color/white"
-        app:labelVisibilityMode="labeled"
-        app:menu="@menu/bottom_nav_menu"
-        app:itemTextColor="@color/black"
         app:itemIconTint="@color/black"
+        app:itemTextColor="@color/black"
+        app:labelVisibilityMode="labeled"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:menu="@menu/bottom_nav_menu" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

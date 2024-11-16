@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -73,8 +74,22 @@ public class ArchiveActivity extends AppCompatActivity {
             }
         });
 
+        Button timelineButton = findViewById(R.id.buttonTimelineArchive);
+        Button keywordButton = findViewById(R.id.buttonKeywordArchive);
 
+        timelineButton.setOnClickListener(v -> {
+            // Navigate to Timeline Archive
+            Intent intent = new Intent(this, TimelineActivity.class);
+            startActivity(intent);
+        });
 
+        /*
+        keywordButton.setOnClickListener(v -> {
+            // Navigate to Keyword Archive
+            Intent intent = new Intent(this, KeywordActivity.class);
+            startActivity(intent);
+        });
+        */
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener((item)->{
             if(item.getItemId() == R.id.nav_home){
