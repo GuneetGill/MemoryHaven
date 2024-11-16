@@ -4,9 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -37,17 +34,20 @@ import java.util.Locale;
 public class SecondActivity extends AppCompatActivity {
 
     // Define maximum number of uploads allowed
-    private static final int MAX_DISPLAY = 4;
+    private static final int MAX_DISPLAY = 5;
 
     ActivitySecondBinding binding;
     FloatingActionButton fab;
     RecyclerView recyclerView;
     ArrayList<DataClass> dataList;
     MyAdapter adapter;
+
     FirebaseAuth auth = FirebaseAuth.getInstance();
     String uid = auth.getCurrentUser().getUid();
     //gets data for specfic user
     final private DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("media").child(uid);
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,12 +80,16 @@ public class SecondActivity extends AppCompatActivity {
 
                 // Limit the number of posts to first few based on MAX_DISPLAYS number
                 int postCount = 0;
+                int totalPostsArchive = 0;
 
                 // Stores all posts into this array
                 ArrayList<DataClass> allPosts = new ArrayList<>();
+
                 // Loop through each child node under `media/<user_id>`
                 for (DataSnapshot dataSnapshot : snapshot.getChildren())
                 {
+                    //count # of posts in arhive
+                    totalPostsArchive++;
                     // Convert each child into a `DataClass` object
                     DataClass dataClass = dataSnapshot.getValue(DataClass.class);
 
@@ -95,29 +99,33 @@ public class SecondActivity extends AppCompatActivity {
                     }
                 }
 
-                for (DataSnapshot dataSnapshot : snapshot.getChildren())
-                {
-
+                //post new posts from today
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    Log.d("mytag", "Raw DataSnapshot: " + dataSnapshot.getValue());
                     //get data stored in database
                     DataClass dataClass = dataSnapshot.getValue(DataClass.class);
+                    String databaseTimestamp = dataClass.getTimestamp(); //get timestamp
 
                     //check date with todays date
-                    if (dataClass != null && todayDate.equals(dataClass.getDate()))
-                    {
-                        if (postCount < MAX_DISPLAY)
-                        {
+                    if (dataClass != null && todayDate.equals(databaseTimestamp)) {
+                        //if archive is less than max display we dont want duplicates
+                        if (postCount < MAX_DISPLAY && totalPostsArchive!= postCount) {
                             dataList.add(dataClass); // Add the post to the list
                             postCount++; // Increment the counter
+                            Log.d("mytag", "we are posting something from today's date");
                         }
-                        else
-                        {
-                            // Stop adding posts once we have reached max
+
+                        // Stop adding posts once we have reached max
+                        if (postCount >= MAX_DISPLAY && totalPostsArchive!= postCount) {
                             break;
                         }
                     }
+                }
 
+                //if no new posts from today then pick from archive
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()){
                     //if post counter is less than display randomly from archive
-                    if (postCount < MAX_DISPLAY)
+                    if (postCount < MAX_DISPLAY && totalPostsArchive!= postCount)
                     {
                         // Shuffle allPosts to get random order
                         Collections.shuffle(allPosts);
@@ -130,11 +138,12 @@ public class SecondActivity extends AppCompatActivity {
                             if (!dataList.contains(randomPost)) {
                                 dataList.add(randomPost);
                                 postCount++;
+                                Log.d("mytag", "we are posting something from the archive");
                             }
                         }
                     }
 
-                    }
+                }
                 // Notify the adapter that the data has changed
                 adapter.notifyDataSetChanged();
             }
@@ -176,9 +185,6 @@ public class SecondActivity extends AppCompatActivity {
 
             return true;
         });
-
-
-
 
     }
 

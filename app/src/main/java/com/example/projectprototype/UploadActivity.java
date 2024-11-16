@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
@@ -38,6 +39,9 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class UploadActivity extends AppCompatActivity {
 
@@ -51,6 +55,7 @@ public class UploadActivity extends AppCompatActivity {
     private Uri audioUri;
     private MediaRecorder mediaRecorder;
     private String audioFilePath;
+
 
     private FirebaseAuth auth;
     private DatabaseReference databaseReference;
@@ -203,7 +208,13 @@ public class UploadActivity extends AppCompatActivity {
     }
 
     private void saveDataToDatabase(String imageUrl, String caption, String date, String audioUrl, String mediaId) {
-        DataClass dataClass = new DataClass(imageUrl, caption, date, audioUrl);
+
+        //get todays date
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
+        String currentTimestamp = sdf.format(new Date());
+        Log.d("mytag", "what the savetodatabase does " + currentTimestamp);
+
+        DataClass dataClass = new DataClass(imageUrl, caption, date, audioUrl, currentTimestamp);
         databaseReference.child(mediaId).setValue(dataClass);
         progressBar.setVisibility(View.INVISIBLE);
         Toast.makeText(UploadActivity.this, "Uploaded", Toast.LENGTH_SHORT).show();

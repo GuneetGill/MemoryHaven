@@ -5,16 +5,18 @@ public class DataClass {
     private String caption;
     private String date;
     private String audioUrl;
+    private String timestamp;
 
     // Default constructor required for calls to DataSnapshot.getValue(DataClass.class)
     public DataClass() {
     }
 
-    public DataClass(String imageURL, String caption, String date, String audioUrl) {
+    public DataClass(String imageURL, String caption, String date, String audioUrl, String timestamp) {
         this.imageURL = imageURL;
         this.caption = caption;
         this.date = date;
         this.audioUrl = audioUrl;
+        this.timestamp = timestamp;
     }
 
     public String getImageURL() {
@@ -48,4 +50,8 @@ public class DataClass {
     public void setAudioUrl(String audioUrl) {
         this.audioUrl = audioUrl;
     }
+
+    public String getTimestamp() { return timestamp; }
+
+    public void setTimestamp(String timestamp) { this.timestamp = timestamp; }
 }
