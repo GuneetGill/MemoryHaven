@@ -1,6 +1,7 @@
 package com.example.projectprototype;
 
 import android.content.Context;
+import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.view.LayoutInflater;
@@ -19,14 +20,15 @@ import com.bumptech.glide.Glide;
 import java.io.IOException;
 import java.util.ArrayList;
 
-//displays list of items of multimedia items just images
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     private ArrayList<DataClass> dataList;
+    private ArrayList<String> mediaIdList;
     private Context context;
 
-    public MyAdapter(ArrayList<DataClass> dataList, Context context) {
+    public MyAdapter(ArrayList<DataClass> dataList, ArrayList<String> mediaIdList, Context context) {
         this.dataList = dataList;
+        this.mediaIdList = mediaIdList;
         this.context = context;
     }
 
@@ -41,10 +43,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         DataClass data = dataList.get(position);
 
-        // Load the image
+        // Load the image, set caption, date, etc.
         Glide.with(context).load(data.getImageURL()).into(holder.recyclerImage);
-
-        // Set the caption and date
         holder.recyclerCaption.setText(data.getCaption());
         holder.recyclerDate.setText(data.getDate());
 
@@ -73,6 +73,15 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                 Toast.makeText(context, "No audio available", Toast.LENGTH_SHORT).show();
             }
         });
+
+        // Pass the Firebase key to PostRatingActivity
+        holder.recyclerImage.setOnClickListener(v -> {
+            String mediaId = mediaIdList.get(position); // Get the Firebase key for this item
+
+            Intent intent = new Intent(context, PostRatingActivity.class);
+            intent.putExtra("MEDIA_ID", mediaId); // Pass the unique Firebase key
+            context.startActivity(intent);
+        });
     }
 
     @Override
@@ -87,11 +96,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
-
             recyclerImage = itemView.findViewById(R.id.recyclerImage);
             recyclerCaption = itemView.findViewById(R.id.recyclerCaption);
-            recyclerDate = itemView.findViewById(R.id.recyclerDate); // New TextView for date
-            playAudioButton = itemView.findViewById(R.id.btnPlayAudio); // Button for playing audio
+            recyclerDate = itemView.findViewById(R.id.recyclerDate);
+            playAudioButton = itemView.findViewById(R.id.btnPlayAudio);
         }
     }
 }
