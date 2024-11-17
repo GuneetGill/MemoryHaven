@@ -8,38 +8,62 @@
     android:layout_height="match_parent"
     tools:context=".ArchiveActivity">
 
+    <!-- Timeline Archive Button -->
+
+    <Button
+        android:id="@+id/timelineButton"
+        android:layout_width="180dp"
+        android:layout_height="55dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="4dp"
+        android:layout_margin="8dp"
+        android:layout_marginEnd="4dp"
+        android:text="Timeline"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/keyWordButton"
+        android:layout_width="180dp"
+        android:layout_height="55dp"
+        android:layout_margin="8dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginBottom="4dp"
+        android:text="Key Word Search"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <GridView
         android:id="@+id/gridView"
         android:layout_width="match_parent"
-        android:layout_height="650dp"
+        android:layout_height="620dp"
         android:layout_gravity="center"
+        android:layout_marginTop="100dp"
         android:horizontalSpacing="8dp"
         android:numColumns="2"
         android:stretchMode="columnWidth"
         android:verticalSpacing="8dp"
-        android:layout_marginTop="100dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <!-- Timeline Archive Button -->
-    <Button
-        android:id="@+id/buttonTimelineArchive"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Timeline Archive"
-        app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"
-        app:layout_constraintEnd_toStartOf="@id/buttonKeywordArchive"
-        app:layout_constraintStart_toStartOf="parent" />
 
-    <!-- Keyword Archive Button -->
-    <Button
-        android:id="@+id/buttonKeywordArchive"
-        android:layout_width="wrap_content"
+    </GridView>
+
+    <EditText
+        android:id="@+id/keywordInput"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Keyword Archive"
-        app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"
-        app:layout_constraintStart_toEndOf="@id/buttonTimelineArchive"
+        android:hint="Enter keyword"
+        android:background="@android:color/white"
+        android:textColor="@android:color/black"
+        android:padding="16dp"
+        android:layout_margin="8dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/keyWordButton"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
