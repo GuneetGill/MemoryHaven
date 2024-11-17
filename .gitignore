@@ -3,4 +3,6 @@ app/google-services.json
 .gradle/
 build/
 app/build/
+.DS_Store
+.gradle/
 
