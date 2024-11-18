@@ -17,37 +17,36 @@ import com.google.android.material.button.MaterialButton;
 
 public class MainActivity extends AppCompatActivity {
 
-
-    private MaterialButton continueBtn;
-    private EditText patientOrFamily;
-
+    private Button patientButton, familyButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        patientOrFamily = findViewById(R.id.patientOrfamily);
-        continueBtn = findViewById(R.id.continuebtn);
 
-        //Set up continue button click event
-        continueBtn.setOnClickListener(v -> {
-            //Check user input to determine if it is patient login or family login
-            String pOrf = patientOrFamily.getText().toString().toLowerCase().trim();
-            if(pOrf.equals("patient")){ //if the user type in "patient", then switch to
-                // login screen where user use email and password to login or sign up
-                startActivity(new Intent(MainActivity.this, LoginActivity.class));
-                Toast.makeText(MainActivity.this, "Switch to Login Page", Toast.LENGTH_SHORT).show();
-            } else if (pOrf.equals("family")) {
-                // if the user type in "family","family members","friend", & "friends",then switch to UID login screen
-                startActivity(new Intent(MainActivity.this, UIDActivity.class));
-                Toast.makeText(MainActivity.this, "Switch to UID Login Page", Toast.LENGTH_SHORT).show();
-            }
-            else{
-                //if the user type nothing, then show the message "please fill in the field"
-                Toast.makeText(MainActivity.this, "Please fill in the field", Toast.LENGTH_SHORT).show();
-            }
-
+        //Initialize views
+        patientButton = findViewById(R.id.patientBtn);
+        familyButton = findViewById(R.id.familyBtn);
+        TextView btnSignUp = findViewById(R.id.textViewSignUp);
+        //Set up "Sign Up" button to navigate to RegisterActivity
+        btnSignUp.setOnClickListener(v ->
+                startActivity(new Intent(MainActivity.this, RegisterActivity.class))
+        );
+        //Set up the on click event for patient and family
+        //If the user tap "patient", then switch to email and password login screen
+        patientButton.setOnClickListener(v -> {
+            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+            Toast.makeText(MainActivity.this, "Switch to Email and Password login screen", Toast.LENGTH_SHORT).show();
+            finish();
         });
+        //If the user tap "family", then switch to UID login screen
+        familyButton.setOnClickListener(v ->{
+            startActivity(new Intent(MainActivity.this, UIDActivity.class));
+            Toast.makeText(MainActivity.this, "Switch to UID login screen", Toast.LENGTH_SHORT).show();
+            finish();
+        });
+
+
 
 
 

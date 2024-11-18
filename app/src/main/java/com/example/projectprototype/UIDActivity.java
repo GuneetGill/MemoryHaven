@@ -1,6 +1,7 @@
 package com.example.projectprototype;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -17,6 +18,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.android.material.button.MaterialButton;
 
 public class UIDActivity extends AppCompatActivity {
+    //This is the UID login page code
     private FirebaseAuth mAuth;
 
     private EditText joincode;
@@ -45,8 +47,14 @@ public class UIDActivity extends AppCompatActivity {
                     String currentUid = currentUser.getUid();
                     if (currentUid.equals(code)) {
                         //UID match, user is authenticated
-                        Toast.makeText(UIDActivity.this, "UID Signed In", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(UIDActivity.this, SecondActivity.class));
+                        Toast.makeText(UIDActivity.this, "UID Signed In", Toast.LENGTH_SHORT).show();
+                        finish();
+                        //Indicator for flagging the login method
+                        SharedPreferences sharedPreferences = getSharedPreferences("LoginPrefs", MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putBoolean("isUidLogin", true);
+                        editor.apply();
                     } else {
                         //UID does not match, user is not authenticated
                         Toast.makeText(UIDActivity.this, "UID does not match", Toast.LENGTH_SHORT).show();

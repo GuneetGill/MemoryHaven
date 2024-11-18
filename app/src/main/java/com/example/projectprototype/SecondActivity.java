@@ -49,7 +49,7 @@ public class SecondActivity extends AppCompatActivity {
         binding = ActivitySecondBinding.inflate(getLayoutInflater());
         setContentView(R.layout.activity_second);
 
-        fab = findViewById(R.id.fab);
+        //fab = findViewById(R.id.fab);
         recyclerView = findViewById(R.id.recyclerView);
 
         // Initialize data structures
@@ -66,11 +66,11 @@ public class SecondActivity extends AppCompatActivity {
         fetchDataFromDatabase();
 
         // Floating Action Button to navigate to UploadActivity
-        fab.setOnClickListener(v -> {
-            Intent intent = new Intent(SecondActivity.this, UploadActivity.class);
-            startActivity(intent);
-            finish();
-        });
+//        fab.setOnClickListener(v -> {
+//            Intent intent = new Intent(SecondActivity.this, UploadActivity.class);
+//            startActivity(intent);
+//            finish();
+//        });
 
         // Set up BottomNavigationView
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);

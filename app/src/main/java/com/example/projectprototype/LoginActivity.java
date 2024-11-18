@@ -1,8 +1,14 @@
 package com.example.projectprototype;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -19,7 +25,9 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private EditText emailaddress, password;
     private MaterialButton login;
+    private boolean isPasswordVisible = false;
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,13 +39,22 @@ public class LoginActivity extends AppCompatActivity {
         emailaddress = findViewById(R.id.emailaddress);
         password = findViewById(R.id.password);
         login = findViewById(R.id.loginbtn);
-        //joinCode = findViewById(R.id.joinCode);
-        TextView btnSignUp = findViewById(R.id.textViewSignUp);
 
-         // Set up "Sign Up" button to navigate to RegisterActivity
-        btnSignUp.setOnClickListener(v ->
-                startActivity(new Intent(LoginActivity.this, RegisterActivity.class))
-        );
+        //Set up login for toggle password view
+        password.setOnTouchListener(new View.OnTouchListener(){
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                final int DRAWABLE_RIHGT = 2; //index for right drawable
+                if(event.getAction() == MotionEvent.ACTION_UP){
+                    if(event.getRawX() >= (password.getRight() - password.getCompoundDrawables()[DRAWABLE_RIHGT].getBounds().width())){
+                        togglePasswordVisibility();
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
+
         //Set up login button click event
         login.setOnClickListener(v -> {
             // get email
@@ -55,22 +72,42 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
-
+    //Login user function
     private void loginUser(String email, String password) {
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
                         // Login successful
                         FirebaseUser user = mAuth.getCurrentUser();
-                        Toast.makeText(LoginActivity.this, "Login successful!", Toast.LENGTH_SHORT).show();
-
                         // Proceed to the next activity
+                        Toast.makeText(LoginActivity.this, "Login successful!", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(LoginActivity.this, SecondActivity.class));
                         finish();  // Finish this activity so it can't be returned to with back button
+                        //Indicator for flagging the login method
+                        SharedPreferences sharedPreferences = getSharedPreferences("LoginPrefs", MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putBoolean("isUidLogin", false);
+                        editor.apply();
                     } else {
                         // Login failed
                         Toast.makeText(LoginActivity.this, "Login failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+    //Toggle password view function
+    private void togglePasswordVisibility() {
+        if (isPasswordVisible) {
+            // Hide password
+            password.setTransformationMethod(PasswordTransformationMethod.getInstance());
+            password.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.password_icon, 0);
+        } else {
+            // Show password
+            password.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+            password.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.password_icon, 0);
+        }
+        isPasswordVisible = !isPasswordVisible;
+
+        // Move cursor to the end of the text
+        password.setSelection(password.length());
     }
 }

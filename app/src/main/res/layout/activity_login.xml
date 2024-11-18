@@ -110,24 +110,7 @@
                 android:textSize="25dp"
                 android:background="@drawable/input_bg"
                 app:cornerRadius="32dp" />
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="160dp"
-                android:layout_height="27dp"
-                android:layout_gravity="center"
-                android:layout_marginTop="30dp"
-                android:gravity="center"
-                android:text="Don't have an Account?"
-                android:textStyle="bold"/>
-            <TextView
-                android:id="@+id/textViewSignUp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="Sign Up"
-                android:textColor="@color/red"
-                android:textStyle="bold"
-                android:textSize="15dp"/>
+
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 </RelativeLayout>

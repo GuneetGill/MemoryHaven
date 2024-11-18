@@ -3,6 +3,7 @@ package com.example.projectprototype;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -65,6 +66,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         //Initialize views
         logoutBtn = findViewById(R.id.logoutbtn);
+        Button resetPasswordButton = findViewById(R.id.resetPasswordButton);
 
         //display userID
         String userId = currentUser.getUid();
@@ -74,11 +76,16 @@ public class ProfileActivity extends AppCompatActivity {
         String email = currentUser.getEmail();
         binding.inputEmail.setText(email);
 
-        //Set up password reset button click event
-        Button resetPasswordButton = findViewById(R.id.resetPasswordButton);
-        resetPasswordButton.setOnClickListener(view ->{
-            resetPassword(email); //Get user's email
-        });
+        //Check login method passed through intent
+        SharedPreferences sharedPreferences = getSharedPreferences("LoginPrefs", MODE_PRIVATE);
+        boolean isUidLogin = sharedPreferences.getBoolean("isUidLogin", false);
+        if (isUidLogin) {
+            resetPasswordButton.setEnabled(false);
+            Toast.makeText(ProfileActivity.this, "Password reset is not available for UID login", Toast.LENGTH_SHORT).show();
+        }
+
+        //Set up reset password button click event
+        resetPasswordButton.setOnClickListener(view -> resetPassword(email));
 
         // Set up logout button click event
         logoutBtn.setOnClickListener(new View.OnClickListener() {
@@ -107,23 +114,15 @@ public class ProfileActivity extends AppCompatActivity {
         });
     }
     //Set up a password reset function
-    private void resetPassword(String email){
+    private void resetPassword(String email) {
         FirebaseAuth auth = FirebaseAuth.getInstance();
-        auth.sendPasswordResetEmail(email).addOnCompleteListener(task->{
-            if(task.isSuccessful()){ //notify user the reset email has been sent
-                Toast.makeText(ProfileActivity.this,"Reset email sent.",Toast.LENGTH_SHORT).show();
-            }
-            else { //notify user that reset email has failed to sent
+        auth.sendPasswordResetEmail(email).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) { //notify user the reset email has been sent
+                Toast.makeText(ProfileActivity.this, "Reset email sent.", Toast.LENGTH_SHORT).show();
+            } else { //notify user that reset email has failed to sent
                 Toast.makeText(ProfileActivity.this, "Failed to send reset email.", Toast.LENGTH_SHORT).show();
             }
         });
     }
-
-
-
-
-
-
-
 
 }

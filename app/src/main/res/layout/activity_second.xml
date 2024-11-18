@@ -8,22 +8,6 @@
     tools:context=".SecondActivity"
     android:background="@color/white">
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/scrollView"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_margin="40dp"
-        android:layout_marginTop="92dp"
-        android:backgroundTint="@color/orange"
-        android:src="@drawable/add_icon"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="@+id/scrollView"
-        app:layout_constraintTop_toBottomOf="@+id/scrollView" />
-
     <ScrollView
         android:id="@+id/scrollView"
         android:layout_width="410dp"
