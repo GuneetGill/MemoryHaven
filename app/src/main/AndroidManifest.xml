@@ -43,7 +43,8 @@
         <activity
             android:name=".UIDActivity"
             android:exported="true"/>
-        
+        <activity android:name=".TimelineActivity"
+            android:exported="false"/>
         <activity
             android:name=".MainActivity"
             android:exported="true">

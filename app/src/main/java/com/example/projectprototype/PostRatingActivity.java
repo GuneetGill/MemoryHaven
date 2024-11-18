@@ -1,5 +1,6 @@
 package com.example.projectprototype;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.RatingBar;
@@ -87,6 +88,9 @@ public class PostRatingActivity extends AppCompatActivity {
                     Toast.makeText(PostRatingActivity.this, "Error fetching data.", Toast.LENGTH_SHORT).show();
                 }
             });
-        });
+            startActivity(new Intent(PostRatingActivity.this, SecondActivity.class));
+            }
+
+        );
     }
 }
