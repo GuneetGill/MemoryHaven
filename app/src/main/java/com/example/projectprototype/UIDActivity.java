@@ -3,6 +3,7 @@ package com.example.projectprototype;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -24,6 +25,8 @@ public class UIDActivity extends AppCompatActivity {
     private EditText joincode;
     private MaterialButton joinLogin;
 
+    private Button returnTomainBtn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,6 +38,7 @@ public class UIDActivity extends AppCompatActivity {
         //Initialize views
         joincode = findViewById(R.id.joincode);
         joinLogin = findViewById(R.id.joinCodeLogin);
+        returnTomainBtn = findViewById(R.id.returnBacktoMainbtn); //return back to main button
 
         // Set up join code login button click event
         joinLogin.setOnClickListener(v -> {
@@ -61,6 +65,13 @@ public class UIDActivity extends AppCompatActivity {
                     }
                 }
             }
+        });
+
+        // Set up return back to main button
+        returnTomainBtn.setOnClickListener(v -> {
+            startActivity(new Intent(UIDActivity.this, MainActivity.class));
+            finish();
+            Toast.makeText(UIDActivity.this, "Switch back to Main Page", Toast.LENGTH_SHORT).show();
         });
     }
 }

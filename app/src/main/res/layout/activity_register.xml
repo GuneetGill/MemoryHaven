@@ -122,11 +122,13 @@
 
     <TextView
         android:id="@+id/alreadyHaveAccount"
-        android:layout_width="301dp"
-        android:layout_height="27dp"
+        android:layout_width="305dp"
+        android:layout_height="33dp"
         android:layout_marginTop="48dp"
         android:text="Already Have an Account?"
+        android:textSize="25dp"
         android:gravity="center"
+        android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="@+id/btnRegister"
         app:layout_constraintStart_toStartOf="@+id/btnRegister"
         app:layout_constraintTop_toBottomOf="@+id/btnRegister" />

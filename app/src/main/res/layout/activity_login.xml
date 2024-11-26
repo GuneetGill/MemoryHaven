@@ -110,6 +110,16 @@
                 android:textSize="25dp"
                 android:background="@drawable/input_bg"
                 app:cornerRadius="32dp" />
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"/>
+            <Button
+                android:layout_width="350dp"
+                android:layout_height="60dp"
+                android:id="@+id/returnTomainBtn"
+                android:background="@drawable/input_bg"
+                android:text="Return to Home"
+                android:textSize="25dp"/>
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>

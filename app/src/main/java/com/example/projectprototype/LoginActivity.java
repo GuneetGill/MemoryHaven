@@ -25,6 +25,7 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private EditText emailaddress, password;
     private MaterialButton login;
+    private Button returnBack;
     private boolean isPasswordVisible = false;
 
     @SuppressLint("ClickableViewAccessibility")
@@ -36,9 +37,10 @@ public class LoginActivity extends AppCompatActivity {
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
         // Initialize views
-        emailaddress = findViewById(R.id.emailaddress);
-        password = findViewById(R.id.password);
-        login = findViewById(R.id.loginbtn);
+        emailaddress = findViewById(R.id.emailaddress); //variable for email address
+        password = findViewById(R.id.password); //variable for password
+        login = findViewById(R.id.loginbtn); //button for login
+        returnBack = findViewById(R.id.returnTomainBtn); //button return back to home screen
 
         //Set up login for toggle password view
         password.setOnTouchListener(new View.OnTouchListener(){
@@ -70,6 +72,13 @@ public class LoginActivity extends AppCompatActivity {
             else{
                 loginUser(email,pass);
             }
+        });
+
+        //Set up return back to home button
+        returnBack.setOnClickListener(v ->{
+            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+            finish();
+            Toast.makeText(LoginActivity.this, "Switch back to Main Page", Toast.LENGTH_SHORT).show();
         });
     }
     //Login user function
