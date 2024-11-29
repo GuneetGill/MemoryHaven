@@ -10,11 +10,11 @@
 
     <ScrollView
         android:id="@+id/scrollView"
-        android:layout_width="410dp"
-        android:layout_height="578dp"
+        android:layout_width="409dp"
+        android:layout_height="729dp"
         android:scrollbarSize="15dp"
         android:scrollbars="vertical"
-        tools:layout_editor_absoluteX="-2dp"
+        tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="0dp">
 
         <androidx.recyclerview.widget.RecyclerView
@@ -30,7 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
 
-        android:layout_marginTop="150dp"
+        android:layout_marginTop="20dp"
         android:background="@color/white"
         app:labelVisibilityMode="labeled"
         app:itemIconTint="@color/black"
