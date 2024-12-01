@@ -40,10 +40,14 @@
         <activity
             android:name=".LoginActivity"
             android:exported="true"/>
+        <activity android:name=".RatingsAnalysisActivity"
+            android:exported="false"/>
         <activity
             android:name=".UIDActivity"
             android:exported="true"/>
         <activity android:name=".TimelineActivity"
+            android:exported="false"/>
+        <activity android:name=".ProfileRatingAnalysis"
             android:exported="false"/>
         <activity
             android:name=".MainActivity"

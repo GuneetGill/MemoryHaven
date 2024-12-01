@@ -1,29 +1,17 @@
 package com.example.projectprototype;
 
-import static androidx.core.content.ContextCompat.startActivity;
-
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.GridLayout;
 import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.ListAdapter;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.example.projectprototype.databinding.ActivityArchiveBinding;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -40,12 +28,12 @@ public class ArchiveActivity extends AppCompatActivity {
     ActivityArchiveBinding binding;
     GridView gridView2;
 
-    ArrayList<DataClass> dataList2;
+    ArrayList<DataClass> dataList2; // List for post data
+    ArrayList<String> mediaIdList; // List for Firebase keys
 
     MyAdapter2 adapter2;
 
     Button keyWordButton;
-
     Button timelineButton;
     EditText keywordInput;
 
@@ -53,82 +41,94 @@ public class ArchiveActivity extends AppCompatActivity {
     String uid = auth.getCurrentUser().getUid();
     final private DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("media").child(uid);
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         binding = ActivityArchiveBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         gridView2 = findViewById(R.id.gridView);
         dataList2 = new ArrayList<>();
-        adapter2 = new MyAdapter2(dataList2,this);
-        gridView2.setAdapter(adapter2); //set adapter here
+        mediaIdList = new ArrayList<>(); // Initialize the mediaIdList
+        adapter2 = new MyAdapter2(dataList2, this);
+        gridView2.setAdapter(adapter2); // Set adapter here
+
+        // Fetch data from Firebase
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot dataSnapshot: snapshot.getChildren()){
+                dataList2.clear(); // Clear previous data
+                mediaIdList.clear(); // Clear previous keys
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     DataClass dataClass = dataSnapshot.getValue(DataClass.class);
-                    dataList2.add(dataClass);
+                    if (dataClass != null && dataSnapshot.getKey() != null) { // Ensure key is not null
+                        dataList2.add(dataClass);
+                        mediaIdList.add(dataSnapshot.getKey()); // Save the Firebase key
+                    }
                 }
                 adapter2.notifyDataSetChanged();
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                Toast.makeText(ArchiveActivity.this, "Failed to load data", Toast.LENGTH_SHORT).show();
             }
         });
 
+        // Handle clicks on GridView items
+        gridView2.setOnItemClickListener((parent, view, position, id) -> {
+            String mediaId = mediaIdList.get(position); // Get the Firebase key for this item
+
+            if (mediaId == null || mediaId.isEmpty()) {
+                Toast.makeText(this, "Media ID is missing for this post", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // Pass the media ID to RatingsAnalysisActivity
+            Intent intent = new Intent(ArchiveActivity.this, RatingsAnalysisActivity.class);
+            intent.putExtra("postId", mediaId); // Pass the Firebase key
+            startActivity(intent);
+        });
+
+        // Set up timeline button
         timelineButton = findViewById(R.id.timelineButton);
-
-
         timelineButton.setOnClickListener(v -> {
-            // Navigate to Timeline Archive
             Intent intent = new Intent(this, TimelineActivity.class);
             startActivity(intent);
         });
 
-        BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottomNavigationView);
-        bottomNavigationView.setOnNavigationItemSelectedListener((item)->{
-            if(item.getItemId() == R.id.nav_home){
-                Intent intent = new Intent(ArchiveActivity.this, SecondActivity.class);
-                startActivity(intent);
+        // Bottom navigation setup
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        bottomNavigationView.setOnNavigationItemSelectedListener((item) -> {
+            if (item.getItemId() == R.id.nav_home) {
+                startActivity(new Intent(ArchiveActivity.this, SecondActivity.class));
             } else if (item.getItemId() == R.id.nav_profile) {
-                Intent intent = new Intent(ArchiveActivity.this,ProfileActivity.class);
-                startActivity(intent);
+                startActivity(new Intent(ArchiveActivity.this, ProfileActivity.class));
             } else if (item.getItemId() == R.id.nav_upload) {
-                Intent intent = new Intent(ArchiveActivity.this, UploadActivity.class);
-                startActivity(intent);
-            }
-            else if (item.getItemId() == R.id.nav_archive) {
-                Intent intent = new Intent(ArchiveActivity.this, ArchiveActivity.class);
-                startActivity(intent);
+                startActivity(new Intent(ArchiveActivity.this, UploadActivity.class));
+            } else if (item.getItemId() == R.id.nav_archive) {
+                startActivity(new Intent(ArchiveActivity.this, ArchiveActivity.class));
             }
             return true;
         });
 
-        // Initialize and set up the Key Word Search Button and Input Bar
+        // Initialize and set up the keyword search button and input bar
         keyWordButton = findViewById(R.id.keyWordButton);
         keywordInput = findViewById(R.id.keywordInput);
         keywordInput.setVisibility(View.GONE); // Hide input bar initially
 
         // Set up the button click listener
-        keyWordButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (keywordInput.getVisibility() == View.GONE) {
-                    // Show the input bar
-                    keywordInput.setVisibility(View.VISIBLE);
-                } else {
-                    // Hide the input bar
-                    keywordInput.setVisibility(View.GONE);
-                }
+        keyWordButton.setOnClickListener(v -> {
+            if (keywordInput.getVisibility() == View.GONE) {
+                // Show the input bar
+                keywordInput.setVisibility(View.VISIBLE);
+            } else {
+                // Hide the input bar
+                keywordInput.setVisibility(View.GONE);
             }
         });
 
-        //set the listener for when user enters input into text field
+        // Set the listener for when user enters input into the text field
         keywordInput.setOnEditorActionListener((v, actionId, event) -> {
             String keyword = keywordInput.getText().toString().trim();
 
@@ -139,11 +139,9 @@ public class ArchiveActivity extends AppCompatActivity {
             keywordInput.setText("");
             return true; // Indicates the action was handled
         });
-
-
     }
 
-    //search keyword method
+    // Search keyword method
     private void searchKeyword(String keyword) {
         // Ensure the keyword is not empty
         if (keyword.isEmpty()) {
@@ -183,9 +181,5 @@ public class ArchiveActivity extends AppCompatActivity {
                 Toast.makeText(ArchiveActivity.this, "Failed to search: " + error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-
-
     }
-
-
 }

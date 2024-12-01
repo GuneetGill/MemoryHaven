@@ -39,8 +39,6 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
 
-
-
 }
 
 
@@ -48,7 +46,6 @@ dependencies {
 
     implementation(libs.appcompat)
     implementation ("com.google.android.gms:play-services-auth:21.2.0")
-
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
@@ -56,10 +53,14 @@ dependencies {
     implementation(libs.firebase.auth)
     implementation(libs.firebase.database)
     implementation(libs.firebase.storage)
+    implementation(libs.firebase.firestore)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
     implementation("com.github.bumptech.glide:glide:4.14.2")
     implementation("com.google.firebase:firebase-storage:21.0.1")
     annotationProcessor("com.github.bumptech.glide:compiler:4.14.2")
+
+    //graph
+    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
 }

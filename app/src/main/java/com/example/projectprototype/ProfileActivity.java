@@ -38,14 +38,17 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.w3c.dom.Text;
 
+import java.util.ArrayList;
+
 
 public class ProfileActivity extends AppCompatActivity {
 
 
     private ActivityProfileBinding binding;
     private FirebaseAuth mAuth;
-
+    private Button profileRatingAnalysisBtn;
     private MaterialButton logoutBtn;
+    ArrayList<String> mediaIdList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +69,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         //Initialize views
         logoutBtn = findViewById(R.id.logoutbtn);
+        profileRatingAnalysisBtn = findViewById(R.id.profileRatingAnalysisBtn);
         Button resetPasswordButton = findViewById(R.id.resetPasswordButton);
 
         //display userID
@@ -93,6 +97,15 @@ public class ProfileActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //Switch back to main page
                 startActivity(new Intent(ProfileActivity.this, MainActivity.class));
+                finish();
+            }
+        });
+
+        profileRatingAnalysisBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Switch back to main page
+                startActivity(new Intent(ProfileActivity.this, ProfileRatingAnalysis.class));
                 finish();
             }
         });

@@ -1,14 +1,14 @@
 {
   "project_info": {
-    "project_number": "1089394642138",
-    "firebase_url": "https://memoryhaven-ca742-default-rtdb.firebaseio.com",
-    "project_id": "memoryhaven-ca742",
-    "storage_bucket": "memoryhaven-ca742.firebasestorage.app"
+    "project_number": "142237379794",
+    "firebase_url": "https://memoryhaven-200b6-default-rtdb.firebaseio.com",
+    "project_id": "memoryhaven-200b6",
+    "storage_bucket": "memoryhaven-200b6.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1089394642138:android:ed95d1fae55ac0a357e9e3",
+        "mobilesdk_app_id": "1:142237379794:android:667952755811456493110b",
         "android_client_info": {
           "package_name": "com.example.projectprototype"
         }
@@ -16,7 +16,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyCzStS1YlbwtLoVfmaurLWmMMx_5OZF7iw"
+          "current_key": "AIzaSyBYVyzpTet8Sut3StchKdHSz8D8shI8rSU"
         }
       ],
       "services": {
