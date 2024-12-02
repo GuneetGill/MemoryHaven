@@ -2,6 +2,7 @@ package com.example.projectprototype;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.view.LayoutInflater;
@@ -26,10 +27,15 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     private ArrayList<String> mediaIdList;
     private Context context;
 
-    public MyAdapter(ArrayList<DataClass> dataList, ArrayList<String> mediaIdList, Context context) {
+    private SharedPreferences sharedPreferences;
+    private boolean isUidLogin;
+
+    public MyAdapter(ArrayList<DataClass> dataList, ArrayList<String> mediaIdList, Context context, SharedPreferences sharedPreferences) {
         this.dataList = dataList;
         this.mediaIdList = mediaIdList;
         this.context = context;
+        this.sharedPreferences = sharedPreferences;
+        this.isUidLogin = sharedPreferences.getBoolean("isUidLogin", false);
     }
 
     @NonNull
@@ -76,11 +82,12 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
         // Pass the Firebase key to PostRatingActivity
         holder.recyclerImage.setOnClickListener(v -> {
-            String mediaId = mediaIdList.get(position); // Get the Firebase key for this item
-
-            Intent intent = new Intent(context, PostRatingActivity.class);
-            intent.putExtra("MEDIA_ID", mediaId); // Pass the unique Firebase key
-            context.startActivity(intent);
+            if(!isUidLogin) {
+                String mediaId = mediaIdList.get(position); // Get the Firebase key for this item
+                Intent intent = new Intent(context, PostRatingActivity.class);
+                intent.putExtra("MEDIA_ID", mediaId); // Pass the unique Firebase key
+                context.startActivity(intent);
+            }
         });
     }
 
