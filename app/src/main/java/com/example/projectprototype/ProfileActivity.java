@@ -54,6 +54,9 @@ public class ProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
 
 
         //initializing view binding

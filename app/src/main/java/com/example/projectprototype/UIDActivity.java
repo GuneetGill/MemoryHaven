@@ -31,6 +31,9 @@ public class UIDActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_uid);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
 
         //Initialize firebase authentication
         mAuth = FirebaseAuth.getInstance();

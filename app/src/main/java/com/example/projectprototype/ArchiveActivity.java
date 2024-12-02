@@ -46,6 +46,9 @@ public class ArchiveActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityArchiveBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
 
         gridView2 = findViewById(R.id.gridView);
         dataList2 = new ArrayList<>();

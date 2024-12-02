@@ -49,6 +49,9 @@ public class SecondActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivitySecondBinding.inflate(getLayoutInflater());
         setContentView(R.layout.activity_second);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
 
         //fab = findViewById(R.id.fab);
         recyclerView = findViewById(R.id.recyclerView);
