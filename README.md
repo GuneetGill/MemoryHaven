@@ -1,9 +1,8 @@
-# MemoryHaven
-
-Acknowledgments
-This project was developed as part of the **CMPT 276: Introduction to Software Engineering** course at Simon Fraser University, with other team members: **Guneet Gill, Julian Loewenherz, Mckenzie Chen, Brayden Yee, Tanhim Haque**
+# Memory Haven
 
 Memory Haven is a mobile application designed to assist dementia patients by leveraging reminiscence therapy through photos and audio contributions from their loved ones. The app enables secure interactions between patients, caregivers, and their support networks to foster emotional connections and track memory retention over time.
+
+Acknowledgments: This project was developed as part of the **CMPT 276: Introduction to Software Engineering** course at Simon Fraser University, with other team members: **Guneet Gill, Julian Loewenherz, Mckenzie Chen, Brayden Yee, Tanhim Haque**
 
 ---
 
@@ -61,16 +60,3 @@ Memory Haven is a mobile application designed to assist dementia patients by lev
 1. Clone the repository:
    ```bash
    git clone https://github.com/your-username/memory-haven.git
-   ```
-
-2. Open the project in Android Studio.
-
-3. Configure Firebase:
-   - Add the `google-services.json` file to the `app/` directory.
-   - Set up Firebase Realtime Database and Storage in the Firebase console.
-
-4. Build and run the application on an Android device or emulator.
-
----
-
-
