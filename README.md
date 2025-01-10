@@ -1,7 +1,6 @@
 # MemoryHaven
-# CMPT 276 Project
 
-# Acknowledgments
+Acknowledgments
 This project was developed as part of the **CMPT 276: Introduction to Software Engineering** course at Simon Fraser University, with other team members: **Guneet Gill, Julian Loewenherz, Mckenzie Chen, Brayden Yee, Tanhim Haque**
 
 Memory Haven is a mobile application designed to assist dementia patients by leveraging reminiscence therapy through photos and audio contributions from their loved ones. The app enables secure interactions between patients, caregivers, and their support networks to foster emotional connections and track memory retention over time.
